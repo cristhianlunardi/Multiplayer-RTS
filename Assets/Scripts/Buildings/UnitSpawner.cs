@@ -14,6 +14,7 @@ public class UnitSpawner : NetworkBehaviour, IPointerClickHandler
     [Command]
     private void CmdSpawnUnit()
     {
+        Debug.Log("cant understand..");
         GameObject unitInstance = Instantiate(unitPrefab, unitSpawnPoint.position, unitSpawnPoint.rotation);
 
         NetworkServer.Spawn(unitInstance, connectionToClient);
@@ -27,14 +28,18 @@ public class UnitSpawner : NetworkBehaviour, IPointerClickHandler
     {
         if (eventData.button != PointerEventData.InputButton.Left)
         {
+            Debug.Log("SI NO ES LEFT CLICK ME SALGO");
+
             return;
         }
 
         if (!hasAuthority)
         {
+            Debug.Log("No autoridad ?????");
             return;
         }
 
+        Debug.Log("UNIT SPAWN");
         CmdSpawnUnit();
     }
 
