@@ -26,20 +26,9 @@ public class UnitSpawner : NetworkBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left)
-        {
-            Debug.Log("SI NO ES LEFT CLICK ME SALGO");
+        if (eventData.button != PointerEventData.InputButton.Left) { return; }
+        if (!hasAuthority) { return; }
 
-            return;
-        }
-
-        if (!hasAuthority)
-        {
-            Debug.Log("No autoridad ?????");
-            return;
-        }
-
-        Debug.Log("UNIT SPAWN");
         CmdSpawnUnit();
     }
 

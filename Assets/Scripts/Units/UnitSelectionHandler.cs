@@ -44,15 +44,17 @@ public class UnitSelectionHandler : NetworkBehaviour
 
     private void StartSelectionArea()
     {
-        foreach (Unit selectedUnit in SelectedUnits)
+        if (!Keyboard.current.leftShiftKey.isPressed)
         {
-            selectedUnit.Deselect();
+            foreach (Unit selectedUnit in SelectedUnits)
+            {
+                selectedUnit.Deselect();
+            }
+
+            SelectedUnits.Clear();
         }
 
-        SelectedUnits.Clear();
-
         unitSelectionArea.gameObject.SetActive(true);
-
         startPosition = Mouse.current.position.ReadValue();
 
         UpdateSelectionArea();
@@ -73,7 +75,10 @@ public class UnitSelectionHandler : NetworkBehaviour
     {
         unitSelectionArea.gameObject.SetActive(false);
 
-        if (unitSelectionArea.sizeDelta.magnitude < 1)
+        float bias = new Vector2(mainCamera.scaledPixelHeight, mainCamera.scaledPixelWidth).magnitude * 0.02f;
+        Debug.Log(bias);
+
+        if (unitSelectionArea.sizeDelta.magnitude < bias)
         {
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -87,6 +92,8 @@ public class UnitSelectionHandler : NetworkBehaviour
             {
                 selectedUnit.Select();
             }
+
+            return;
         }
 
         Vector2 min = unitSelectionArea.anchoredPosition - (unitSelectionArea.sizeDelta/2);
@@ -94,6 +101,8 @@ public class UnitSelectionHandler : NetworkBehaviour
 
         foreach (Unit unit in player.GetMyUnits())
         {
+            if (SelectedUnits.Contains(unit)) { continue; }
+
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(unit.transform.position);
 
             if (
